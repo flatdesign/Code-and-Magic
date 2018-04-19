@@ -1,5 +1,7 @@
 'use strict';
 
+(function() {
+
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
@@ -14,14 +16,16 @@ var setupColorFireball = document.querySelector('.setup-fireball-wrap');
 var similarListElement = document.querySelector('.setup-similar-list');
 var similarListTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 
-
 var openPopup = function() {
 	userDialog.classList.remove('hidden');
 	document.addEventListener('keydown', onPopupEscPress);
+	userDialog.style.top = "80px";
+	userDialog.style.left ="675px";
 };
 
 var closePopup = function() {
 	userDialog.classList.add('hidden');
+	artifactsElement.style.border = "";
 	document.removeEventListener('keydown', onPopupEscPress);
 };
 
@@ -135,6 +139,91 @@ for(var i = 0; i < wizards.length; i++) {
 }
 similarListElement.appendChild(fragment);
 document.querySelector('.setup-similar').classList.remove('hidden'); 
+
+
+
+var dialogHandle = userDialog.querySelector(".setup-user-pic");
+
+
+
+dialogHandle.addEventListener("mousedown", function(evt) {
+	evt.preventDefault();
+
+	var startCoords = {
+		x: evt.clientX,
+		y: evt.clientY
+	};
+
+	
+
+
+	var onMouseMove = function(moveEvt) {
+		moveEvt.preventDefault();
+
+		var shift = {
+			x: moveEvt.clientX - startCoords.x,
+			y: moveEvt.clientY - startCoords.y
+		};
+
+		startCoords = {
+			x: moveEvt.clientX,
+			y: moveEvt.clientY
+		}
+
+		userDialog.style.top = (userDialog.offsetTop + shift.y) + "px";
+		userDialog.style.left =(userDialog.offsetLeft + shift.x) + "px";
+	};
+
+		var onMouseUp = function(upEvent) {
+			upEvent.preventDefault();
+			document.removeEventListener("mousemove", onMouseMove);
+			document.removeEventListener("mouseup", onMouseUp);
+		};
+
+	document.addEventListener("mousemove", onMouseMove);
+	document.addEventListener("mouseup", onMouseUp);
+});
+
+var shopElement = document.querySelector(".setup-artifacts-shop");
+var artifactsElement = document.querySelector(".setup-artifacts");
+var draggItem = null;
+
+shopElement.addEventListener("dragstart", function(evt) {
+	if(evt.target.tagName.toLowerCase() === "img") {
+		draggItem = evt.target;
+		artifactsElement.style.border = "2px dashed red";
+		evt.dataTransfer.setData("text/plain", evt.target.alt);
+	}
+});
+
+
+
+artifactsElement.addEventListener("dragover", function (evt) {
+	evt.preventDefault();
+	return false;
+});
+
+artifactsElement.addEventListener("drop", function(evt) {
+	evt.target.style.backgroundColor = "";
+	evt.target.appendChild(draggItem);
+	artifactsElement.style.border = "";
+	evt.preventDefault();
+});
+
+artifactsElement.addEventListener("dragenter", function(evt) {
+	evt.target.style.backgroundColor = "yellow";
+	evt.preventDefault();
+});
+
+artifactsElement.addEventListener("dragleave", function(evt) {
+	evt.target.style.backgroundColor = "";
+	evt.preventDefault();
+});
+
+})();
+
+
+
 
 
 

@@ -1,3 +1,6 @@
+"use strict";
+
+(function() {
 window.renderStatistics = function(ctx, names, times) {
 	ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
 	ctx.beginPath();
@@ -73,3 +76,5 @@ window.renderStatistics = function(ctx, names, times) {
 	}
 	
 };
+
+})();
